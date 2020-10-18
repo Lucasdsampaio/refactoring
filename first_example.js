@@ -13,6 +13,7 @@ plays = {
     },
 };
 
+
 invoice = {
     customer: "BigCo",
     performances: [{
@@ -30,9 +31,11 @@ invoice = {
     ],
 };
 
+
 function playFor(aPerformance) {
     return plays[aPerformance.playID]
 }
+
 
 function amountFor(aPerformance) {
     let result = 0;
@@ -56,26 +59,37 @@ function amountFor(aPerformance) {
     return result;
 }
 
+
 function volumeCreditsFor(aPerformance) {
     let volumeCredits = 0
     volumeCredits += Math.max(aPerformance.audience - 30, 0);
     if ("comedy" === playFor(aPerformance).type) volumeCredits += Math.floor(aPerformance.audience / 5);
 }
 
-function statement(invoice) {
+
+function format(aNumber) {
+    return new Intl.NumberFormat("en", {
+        style: "currency",
+        currency: "USD",
+        minimumFractionDigits: 2
+    }).format(aNumber);
+}
+
+
+function statement(invoice, plays) {
     let totalAmount = 0;
     let volumeCredits = 0;
     let result = `Statement for ${invoice.customer}\n`;
 
     for (perf of invoice.performances) {
         volumeCredits = volumeCreditsFor(perf)
-        result += ` ${playFor(perf).name}: ${amountFor(perf) / 100} (${perf.audience} seats)\n`;
+        result += ` ${playFor(perf).name}: ${format(amountFor(perf) / 100)} (${perf.audience} seats)\n`;
         totalAmount += amountFor(perf);
     }
-    result += `Amount owed is ${totalAmount / 100}\n`;
+    result += `Amount owed is ${format(totalAmount / 100)}\n`;
     result += `You earned ${volumeCredits} credits`;
     return result;
 }
 
-example = statement(invoice);
+example = statement(invoice, plays);
 console.log(example);

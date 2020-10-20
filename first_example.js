@@ -13,6 +13,7 @@ plays = {
     },
 };
 
+
 invoice = {
     customer: "BigCo",
     performances: [{
@@ -30,9 +31,11 @@ invoice = {
     ],
 };
 
+
 function playFor(aPerformance) {
     return plays[aPerformance.playID]
 }
+
 
 function amountFor(aPerformance) {
     let result = 0;
@@ -57,26 +60,50 @@ function amountFor(aPerformance) {
 }
 
 
-function statement(invoice) {
-    let totalAmount = 0;
-    let volumeCredits = 0;
+function volumeCreditsFor(aPerformance) {
+    let volumeCredits = 0
+    volumeCredits += Math.max(aPerformance.audience - 30, 0);
+    if ("comedy" === playFor(aPerformance).type) volumeCredits += Math.floor(aPerformance.audience / 5);
+    return volumeCredits
+}
+
+
+function formatAsUSD(aNumber) {
+    return new Intl.NumberFormat("en", {
+        style: "currency",
+        currency: "USD",
+        minimumFractionDigits: 2
+    }).format(aNumber/100);
+}
+
+function totalVolumeCredits() {
+    let result = 0
+    for (let perf of invoice.performances) {
+        result += volumeCreditsFor(perf)
+    }
+    return result
+}
+
+function totalAmount() {
+    let result = 0
+    for (let perf of invoice.performances) {
+        result += amountFor(perf)
+    }
+    return result
+}
+
+function statement(invoice, plays) {
+    //let totalAmount = 0;
     let result = `Statement for ${invoice.customer}\n`;
 
     for (perf of invoice.performances) {
-        let thisAmount = amountFor(perf)
-
-        // add volume credits
-        volumeCredits += Math.max(perf.audience - 30, 0);
-        // add extra credit for every ten comedy attendees
-        if ("comedy" === playFor(perf).type) volumeCredits += Math.floor(perf.audience / 5);
-        // print line for this order
-        result += ` ${playFor(perf).name}: ${thisAmount / 100} (${perf.audience} seats)\n`;
-        totalAmount += thisAmount;
+        result += ` ${playFor(perf).name}: ${formatAsUSD(amountFor(perf))} (${perf.audience} seats)\n`;
     }
-    result += `Amount owed is ${totalAmount / 100}\n`;
-    result += `You earned ${volumeCredits} credits`;
+    
+    result += `Amount owed is ${formatAsUSD(totalAmount())}\n`;
+    result += `You earned ${totalVolumeCredits()} credits`;
     return result;
 }
 
-example = statement(invoice);
+example = statement(invoice, plays);
 console.log(example);

@@ -1,0 +1,21 @@
+{
+  "name": "refactoring",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "createStatementData.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lucasdsampaio/refactoring.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Lucasdsampaio/refactoring/issues"
+  },
+  "homepage": "https://github.com/Lucasdsampaio/refactoring#readme"
+}

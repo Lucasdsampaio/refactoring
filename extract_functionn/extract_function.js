@@ -12,8 +12,7 @@ function printOwing(invoice) {
     const today = Clock.today
     invoice.dueDate = new Date(today.getFullYear(), today.getMonth(), today.getDat)
 
-    printDetails()
-    
+    printDetails(invoice, outstanding)    
 }
 
 function printDetails() {

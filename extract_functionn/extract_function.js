@@ -1,15 +1,22 @@
 function printOwing(invoice) {
-    let outstanding = 0
-
     printBanner()
-
+    
     // calculate outstanding
+    let outstanding = 0
     for (const o of invoice.orders) {
-    outstanding += o.amount
+        outstanding += o.amount
     }
 
     recordDueDate(invoice)
-    printDetails(invoice, outstanding)    
+    printDetails(invoice, outstanding)
+
+    function calculateOutstanding(invoice) {
+        let outstanding = 0
+        for (const o of invoice.orders) {
+            outstanding += o.amount
+        }
+        return outstanding
+    }
 }
 
 function recordDueDate(invoice) {
